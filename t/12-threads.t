@@ -9,7 +9,7 @@ use strict;
 use warnings;
 
 use Config;
-use Test::More;
+use Test2::V0;
 
 plan skip_all => 'this perl is not built with ithreads'
     unless $Config{useithreads};
@@ -53,7 +53,7 @@ my @threads = map {
     );
 } 1 .. 4;
 
-is_deeply [ map { $_->join } @threads ], [ 0, 0, 0, 0 ],
+is [ map { $_->join } @threads ], [ 0, 0, 0, 0 ],
     'four threads parsed concurrently with no interference';
 
 is parse_item('2')->[1], 2, 'and the parent still parses afterwards';

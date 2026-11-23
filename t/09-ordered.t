@@ -9,37 +9,37 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test2::V0;
 
 use HTTP::libsfparse qw( parse_item parse_list parse_dictionary :types );
 
-is_deeply parse_dictionary('a=1, b=2'),
+is parse_dictionary('a=1, b=2'),
     [
         [ 'a', [ SFPARSE_TYPE_INTEGER, 1, [] ] ],
         [ 'b', [ SFPARSE_TYPE_INTEGER, 2, [] ] ],
     ],
     'a dictionary is a list of pairs';
 
-is_deeply [ map { $_->[0] } @{ parse_dictionary('b=1, a=2, c=3') } ],
+is [ map { $_->[0] } @{ parse_dictionary('b=1, a=2, c=3') } ],
     [ 'b', 'a', 'c' ],
     'field order is kept';
 
-is_deeply [ map { $_->[0] } @{ parse_dictionary('a=1, b=2, a=3') } ],
+is [ map { $_->[0] } @{ parse_dictionary('a=1, b=2, a=3') } ],
     [ 'a', 'b', 'a' ],
     'duplicate keys are kept';
 
-is_deeply parse_item('foo;a=1;a=2')->[2],
+is parse_item('foo;a=1;a=2')->[2],
     [
         [ 'a', [ SFPARSE_TYPE_INTEGER, 1, undef ] ],
         [ 'a', [ SFPARSE_TYPE_INTEGER, 2, undef ] ],
     ],
     'parameters are pairs too, duplicates and all';
 
-is_deeply parse_dictionary(''), [], 'an empty dictionary';
-is_deeply parse_item('foo')->[2], [], 'an item with no parameters';
+is parse_dictionary(''), [], 'an empty dictionary';
+is parse_item('foo')->[2], [], 'an item with no parameters';
 
 # Lists are already in order; their parameters take the same pair form.
-is_deeply parse_list('a;x=1'),
+is parse_list('a;x=1'),
     [
         [
             SFPARSE_TYPE_TOKEN,
@@ -50,7 +50,7 @@ is_deeply parse_list('a;x=1'),
     'list members carry pairs as well';
 
 # Inner lists, their members and all their parameters follow suit.
-is_deeply parse_item('(1;p=1 2);z=9'),
+is parse_item('(1;p=1 2);z=9'),
     [
         SFPARSE_TYPE_INNER_LIST,
         [

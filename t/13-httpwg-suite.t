@@ -20,7 +20,7 @@ use warnings;
 
 use File::Basename qw( dirname );
 use File::Spec ();
-use Test::More;
+use Test2::V0;
 
 eval { require JSON::PP; JSON::PP->VERSION('2.27103'); 1 }
     or plan skip_all => 'JSON::PP is required for the httpwg test suite';
@@ -276,8 +276,8 @@ sub got_structure {
     is json_scalar_kind( $probe->[1] ), 'decimal', '... a JSON decimal, and';
     is json_scalar_kind( $probe->[2] ), 'string',  '... a JSON string';
 
-    is_deeply expected_bare( $probe->[3] ), [ 'boolean', 1 ], 'JSON true';
-    is_deeply expected_bare( $probe->[4] ), [ 'boolean', 0 ], 'JSON false';
+    is expected_bare( $probe->[3] ), [ 'boolean', 1 ], 'JSON true';
+    is expected_bare( $probe->[4] ), [ 'boolean', 0 ], 'JSON false';
 
     is base32_decode('NBSWY3DP'), 'hello', 'base32, as the suite writes it';
     is base32_decode('MZXW6==='), 'foo',   'base32 with padding';
@@ -355,7 +355,7 @@ for my $name (@files) {
                 next;
             }
 
-            my $ok = is_deeply $got, $want, $case->{name};
+            my $ok = is $got, $want, $case->{name};
 
             $total{pass}++ if $ok;
         }

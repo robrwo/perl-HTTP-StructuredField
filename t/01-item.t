@@ -3,15 +3,15 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test2::V0;
 
 use HTTP::libsfparse qw( parse_item :types );
 
-is_deeply parse_item('foo'),
+is parse_item('foo'),
     [ SFPARSE_TYPE_TOKEN, 'foo', [] ],
     'a bare token';
 
-is_deeply parse_item('text/html;q=0.8'),
+is parse_item('text/html;q=0.8'),
     [
         SFPARSE_TYPE_TOKEN,
         'text/html',
@@ -19,7 +19,7 @@ is_deeply parse_item('text/html;q=0.8'),
     ],
     'a token with a decimal parameter';
 
-is_deeply parse_item('  foo  '),
+is parse_item('  foo  '),
     [ SFPARSE_TYPE_TOKEN, 'foo', [] ],
     'surrounding spaces are allowed';
 
@@ -35,11 +35,11 @@ for my $field ( 'foo', '?1', '42', '1.5', '"s"', ':aGk=:', '@0', '%"a"', '()' )
 
 # Inner lists are items too, and may be a whole field value.
 
-is_deeply parse_item('()'),
+is parse_item('()'),
     [ SFPARSE_TYPE_INNER_LIST, [], [] ],
     'an empty inner list';
 
-is_deeply parse_item('(1 2)'),
+is parse_item('(1 2)'),
     [
         SFPARSE_TYPE_INNER_LIST,
         [
@@ -50,7 +50,7 @@ is_deeply parse_item('(1 2)'),
     ],
     'an inner list of integers';
 
-is_deeply parse_item('(1;a=1 2);b=2'),
+is parse_item('(1;a=1 2);b=2'),
     [
         SFPARSE_TYPE_INNER_LIST,
         [

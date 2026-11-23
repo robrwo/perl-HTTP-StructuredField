@@ -3,20 +3,20 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test2::V0;
 
 use HTTP::libsfparse qw( parse_list :types );
 
-is_deeply parse_list(''), [], 'an empty field value is an empty list';
+is parse_list(''), [], 'an empty field value is an empty list';
 
-is_deeply parse_list('gzip, br'),
+is parse_list('gzip, br'),
     [
         [ SFPARSE_TYPE_TOKEN, 'gzip', [] ],
         [ SFPARSE_TYPE_TOKEN, 'br',   [] ],
     ],
     'a list of tokens';
 
-is_deeply parse_list('a;q=1, b;q=0.5'),
+is parse_list('a;q=1, b;q=0.5'),
     [
         [
             SFPARSE_TYPE_TOKEN,
@@ -37,7 +37,7 @@ is_deeply parse_list('a;q=1, b;q=0.5'),
 
     is scalar @$list, 3, 'three members';
     is $list->[0][0], SFPARSE_TYPE_INNER_LIST, 'first is an inner list';
-    is_deeply [ map { $_->[1] } @{ $list->[0][1] } ], [ 1, 2, 3 ],
+    is [ map { $_->[1] } @{ $list->[0][1] } ], [ 1, 2, 3 ],
         'with three integers';
     is $list->[0][1][2][2][0][1][1], 'foo',
         'the third of which has a string parameter';

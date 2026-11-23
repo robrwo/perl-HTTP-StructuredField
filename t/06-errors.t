@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test2::V0;
 
 use HTTP::libsfparse qw( parse_item parse_list parse_dictionary :types );
 
@@ -32,7 +32,7 @@ for ( 1 .. 3 ) {
     ok !eval { parse_dictionary('a=1, b=!'); 1 }, 'repeatable failure';
 }
 
-is_deeply parse_dictionary('a=1'),
+is parse_dictionary('a=1'),
     [ [ 'a', [ SFPARSE_TYPE_INTEGER, 1, [] ] ] ],
     'parsing still works after a failure';
 
@@ -52,7 +52,7 @@ like $@, qr/^Usage: HTTP::libsfparse::parse_item\(input\)/,
     '... with the usage message';
 
 # Input that is not a string is stringified, as everywhere else in Perl.
-is_deeply parse_item(42), [ SFPARSE_TYPE_INTEGER, 42, [] ],
+is parse_item(42), [ SFPARSE_TYPE_INTEGER, 42, [] ],
     'a number is stringified';
 
 done_testing;

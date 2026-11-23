@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test2::V0;
 
 use HTTP::libsfparse qw( parse_item :types );
 
@@ -38,7 +38,7 @@ ok !eval { parse_item('1000000000000000'); 1 },
     is $item->[1], 1.001, 'as a Perl number';
 }
 
-is_deeply [ map { parse_item($_)->[1] } '4.5', '-1.5', '0.0', '1.100' ],
+is [ map { parse_item($_)->[1] } '4.5', '-1.5', '0.0', '1.100' ],
     [ 4.5, -1.5, 0, 1.1 ],
     'decimal values';
 
@@ -117,7 +117,7 @@ ok !eval { parse_item('%"A%C3%A9"'); 1 },
 # --- inner lists -----------------------------------------------------------
 
 is type_of('(1 2)'), SFPARSE_TYPE_INNER_LIST, 'inner lists';
-is_deeply value_of('()'), [], 'an empty inner list';
+is value_of('()'), [], 'an empty inner list';
 ok !eval { parse_item('(())'); 1 }, 'inner lists do not nest';
 
 done_testing;

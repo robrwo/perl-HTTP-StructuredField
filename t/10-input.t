@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test2::V0;
 
 use HTTP::libsfparse qw( parse_item parse_dictionary :types );
 
@@ -14,7 +14,7 @@ use HTTP::libsfparse qw( parse_item parse_dictionary :types );
     utf8::upgrade($field);
 
     ok utf8::is_utf8($field), 'input is internally utf8';
-    is_deeply parse_dictionary($field),
+    is parse_dictionary($field),
         [
             [ 'a', [ SFPARSE_TYPE_INTEGER, 1,   [] ] ],
             [ 'b', [ SFPARSE_TYPE_STRING,  'x', [] ] ],
@@ -30,7 +30,7 @@ use HTTP::libsfparse qw( parse_item parse_dictionary :types );
 
 # Empty and NUL-containing input.
 {
-    is_deeply parse_dictionary(''), [], 'the empty string';
+    is parse_dictionary(''), [], 'the empty string';
     ok !eval { parse_item("a\0b"); 1 }, 'a NUL byte is not a valid token';
 }
 

@@ -3,13 +3,13 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test2::V0;
 
 use HTTP::libsfparse qw( parse_item parse_dictionary :types );
 
 # Parameters are [ key, item ] pairs in field order.
 
-is_deeply parse_item('foo; a;b=?0;c=1;d="s";e=:aGk=:;f=4.5')->[2],
+is parse_item('foo; a;b=?0;c=1;d="s";e=:aGk=:;f=4.5')->[2],
     [
         [ 'a', [ SFPARSE_TYPE_BOOLEAN, 1,   undef ] ],
         [ 'b', [ SFPARSE_TYPE_BOOLEAN, 0,   undef ] ],
@@ -20,18 +20,18 @@ is_deeply parse_item('foo; a;b=?0;c=1;d="s";e=:aGk=:;f=4.5')->[2],
     ],
     'every bare item type works as a parameter value';
 
-is_deeply parse_item('foo;   a=1')->[2],
+is parse_item('foo;   a=1')->[2],
     [ [ 'a', [ SFPARSE_TYPE_INTEGER, 1, undef ] ] ],
     'spaces are allowed after the semicolon';
 
 ok !defined parse_item('foo;a')->[2][0][1][2],
     'parameter values have no parameters of their own';
 
-is_deeply parse_item('foo')->[2], [],
+is parse_item('foo')->[2], [],
     'an item without parameters has an empty parameter list';
 
 # Repeated keys are kept, as in a dictionary.
-is_deeply parse_item('foo;a=1;a=2')->[2],
+is parse_item('foo;a=1;a=2')->[2],
     [
         [ 'a', [ SFPARSE_TYPE_INTEGER, 1, undef ] ],
         [ 'a', [ SFPARSE_TYPE_INTEGER, 2, undef ] ],
@@ -45,7 +45,7 @@ is_deeply parse_item('foo;a=1;a=2')->[2],
 }
 
 # Keys may hold the full RFC 9651 key character set.
-is_deeply [ map { $_->[0] } @{ parse_item('foo;a1;b_;*c;d-e;f.g')->[2] } ],
+is [ map { $_->[0] } @{ parse_item('foo;a1;b_;*c;d-e;f.g')->[2] } ],
     [ 'a1', 'b_', '*c', 'd-e', 'f.g' ],
     'parameter keys may contain digits, _, *, - and .';
 
@@ -53,8 +53,8 @@ is_deeply [ map { $_->[0] } @{ parse_item('foo;a1;b_;*c;d-e;f.g')->[2] } ],
 {
     my $dict = parse_dictionary('a=1;x=1, b=2;y=2');
 
-    is_deeply [ map { $_->[0] } @{ $dict->[0][1][2] } ], ['x'], 'a has x';
-    is_deeply [ map { $_->[0] } @{ $dict->[1][1][2] } ], ['y'], 'b has y';
+    is [ map { $_->[0] } @{ $dict->[0][1][2] } ], ['x'], 'a has x';
+    is [ map { $_->[0] } @{ $dict->[1][1][2] } ], ['y'], 'b has y';
 }
 
 for my $bad ( 'foo;', 'foo;;a', 'foo;A=1', 'foo;a=', 'foo;=1', 'foo;_a' ) {

@@ -11,7 +11,7 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test2::V0;
 
 use HTTP::libsfparse qw( parse_item parse_list parse_dictionary );
 
