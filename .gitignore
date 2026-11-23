@@ -1,0 +1,12 @@
+.build/
+HTTP-libsfparse-*.sigstore.json
+HTTP-libsfparse-*.tar.gz
+HTTP-libsfparse-*/
+MYMETA.*
+Makefile
+Makefile.old
+blib/
+pm_to_blib
+*.o
+*.bs
+libsfparse.c
