@@ -9,6 +9,8 @@ use Sub::Util ();
 
 use experimental qw( postderef signatures );
 
+our $VERSION = 'v0.0.1';
+
 =head1 DESCRIPTION
 
 This is an object-oriented wrapper around L<HTTP::libsfparse>.

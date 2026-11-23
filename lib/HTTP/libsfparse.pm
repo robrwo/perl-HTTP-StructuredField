@@ -1,12 +1,12 @@
 package HTTP::libsfparse;
 
-use strict;
+use v5.20;
 use warnings;
 
 use Exporter   5.57 qw( import );
 use XSLoader   ();
 
-our $VERSION = '0.002';
+our $VERSION = 'v0.0.1';
 
 # The type constants are defined in XS, from libsfparse's own enum.
 our @TYPES = qw(
