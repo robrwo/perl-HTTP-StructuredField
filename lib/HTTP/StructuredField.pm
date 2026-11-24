@@ -11,9 +11,34 @@ use experimental qw( postderef signatures );
 
 our $VERSION = 'v0.0.1';
 
+# ABSTRACT: parse RFC 9421 HTTP Structured Fields
+
+=head1 SYNOPSIS
+
+    use HTTP::StructuredField;
+
+    try {
+
+        my $dict = HTTP::StructuredField->parse_dictionary( $msg->header("signature-input") );
+        for my $key ( keys $dist->%* ) {
+
+            my $input = $dict->{$key};
+            $input->is_list or die "list expected";
+
+            my @items = $input->value->@*;
+
+      }
+
+
+    }
+    catch ($error) {
+      ...
+    }
+
 =head1 DESCRIPTION
 
-This is an object-oriented wrapper around L<HTTP::libsfparse>.
+This is an object-oriented wrapper around L<HTTP::libsfparse>, for correctly parsing
+L<RFC 9421|https://www.rfc-editor.org/info/rfc9421/> HTTP Structured Fields.
 
 =cut
 
