@@ -8,7 +8,8 @@ use XSLoader   ();
 
 our $VERSION = 'v0.0.1';
 
-# The type constants are defined in XS, from libsfparse's own enum.
+# ABSTRACT: parse RFC 9421 HTTP Structured Fields using libsfparse
+
 our @TYPES = qw(
     SFPARSE_TYPE_BOOLEAN
     SFPARSE_TYPE_INTEGER
@@ -21,8 +22,6 @@ our @TYPES = qw(
     SFPARSE_TYPE_DISPSTRING
 );
 
-# The positions within a parsed item, and within a key/value pair. Also
-# defined in XS, from the same place the structures are built.
 our @INDEX = qw(
     SFP_TYPE
     SFP_VALUE
@@ -31,28 +30,18 @@ our @INDEX = qw(
     SFP_ITEM
 );
 
-our @EXPORT_OK
-    = ( qw( parse_item parse_list parse_dictionary ), @TYPES, @INDEX );
+our @EXPORT_OK   = ( qw( parse_item parse_list parse_dictionary ), @TYPES, @INDEX );
 our %EXPORT_TAGS = (
     all   => [@EXPORT_OK],
     types => [@TYPES],
     index => [@INDEX],
 );
 
-# The commit of ngtcp2/sfparse bundled in src/
-our $LIBSFPARSE_COMMIT = 'b9673f9c5d010955c9ce310856c22f8d1505383f';
-
 XSLoader::load( __PACKAGE__, $VERSION );
 
 1;
 
 __END__
-
-=encoding UTF-8
-
-=head1 NAME
-
-HTTP::libsfparse - parse RFC 9651 HTTP Structured Field Values using libsfparse
 
 =head1 SYNOPSIS
 
@@ -94,27 +83,14 @@ HTTP::libsfparse - parse RFC 9651 HTTP Structured Field Values using libsfparse
 
 =head1 DESCRIPTION
 
-This module is an XS binding to
-L<libsfparse|https://github.com/ngtcp2/sfparse>, the C parser for HTTP
+This module is an XS binding to L<libsfparse|https://github.com/ngtcp2/sfparse>, the C parser for HTTP
 Structured Field Values (L<RFC 9651|https://www.rfc-editor.org/rfc/rfc9651>,
 which obsoletes RFC 8941) written for the ngtcp2 and nghttp3 QUIC/HTTP3
 stacks.
 
-Structured Field Values are the typed syntax used by newer HTTP header and
-trailer fields, for example C<Priority> (RFC 9218), C<Accept-CH>,
-C<Cache-Status> and C<Signature-Input>. Parsing them by hand with regular
-expressions tends to go wrong in exactly the places that matter, so this
-module delegates the whole grammar to a well fuzzed C implementation.
+It uses a bundled copy of libsfparse, and not a version that may already be installed on your system.
 
-The interface is three functions. Each one takes a field value, parses it in
-a single call, and returns plain Perl data structures; there is no parser
-object to keep track of and no state that outlives a call.
-
-A copy of libsfparse is bundled with this distribution, so nothing needs to be
-installed separately. The bundled upstream commit is available as
-C<$HTTP::libsfparse::LIBSFPARSE_COMMIT>.
-
-=head1 VALUE REPRESENTATION
+=head2 Format of the Parsed Data
 
 Every parsed item is an array reference of three elements:
 
@@ -124,23 +100,13 @@ Every parsed item is an array reference of three elements:
       1   SFP_VALUE    the value itself
       2   SFP_PARAMS   an array reference of [ $key, $item ] pairs
 
-Every item has all three elements whatever its type, so indexing into one
-never has to check the type first.
-
-The names in that second column are constants for the positions, described
-under L</Indexing by name> below.
-
-The type is always reported, because the Structured Fields types do not map
-onto distinct Perl types: a token and a string are both Perl strings, and
-losing the difference would make a value impossible to serialise again
-correctly.
+The names in that second column are constants for the positions.
 
 =head2 Types
 
 C<$type> is one of the following constants, which are libsfparse's own
 C<sfparse_type> enumerators and carry its values. Import them individually or
-as C<:types>. Do not write the numbers out: they come from the C enum, which
-is free to renumber itself when the bundled library is updated.
+as C<:types>.
 
 =over 4
 
@@ -190,32 +156,6 @@ inner list itself.
 
 =back
 
-=head2 Indexing by name
-
-Reading a value as C<< $item->[1] >> is terse but says nothing about what is
-being read, and the chains get long once parameters and inner lists are
-involved. The positions are therefore available as constants, which import
-individually or as C<:index>:
-
-    $item->[SFP_VALUE]      # rather than $item->[1]
-
-A dictionary member and a parameter are each a C<[ $key, $item ]> pair, whose
-two positions are C<SFP_KEY> and C<SFP_ITEM>:
-
-    $dict->[0][SFP_KEY]              # the first member's key
-    $dict->[0][SFP_ITEM][SFP_VALUE]  # and its value
-
-C<SFP_KEY> and C<SFP_TYPE> are both 0, and C<SFP_ITEM> and C<SFP_VALUE> are
-both 1: a pair and an item are different shapes that happen to share those
-two positions. Use whichever pair of names says what is being indexed, and a
-chain reads as what it walks:
-
-    # the parameter b of the third member of the first inner list
-    $list->[0][SFP_VALUE][2][SFP_PARAMS][0][SFP_ITEM][SFP_VALUE]
-
-These are defined in the same place in the C source as the code that builds
-the structures, so they cannot fall out of step with the layout.
-
 =head2 Parameters
 
 C<$params> is always present on items returned by the functions in this
@@ -226,88 +166,13 @@ parameters cannot nest).
 
 A parameter with no explicit value is boolean true, as the RFC requires.
 
-Keys are reported as they appear and are not deduplicated, which is what lets
+Keys are reported as they appear and are not deduplicated. which is what lets
 a caller reject a field value that repeats one. RFC 9651 says the last
 occurrence of a repeated key wins; collapsing them that way is one line:
 
     my %params = map { $_->[0] => $_->[1] } @$params;
 
-=head1 FUNCTIONS
-
-Nothing is exported by default. Import the functions you want, the type
-constants as C<:types>, the position constants as C<:index>, or everything as
-C<:all>.
-
-Each function takes the field value as a byte string and takes no options.
-
-=head2 parse_item
-
-    my $item = parse_item($string);
-
-Parses a field value consisting of a single item and returns one item.
-Trailing content after the item is a parse error, as is an empty field value.
-
-=head2 parse_list
-
-    my $list = parse_list($string);
-
-Parses a List and returns an array reference of items. An empty field value
-yields an empty array reference, which is what RFC 9651 calls an empty list.
-
-=head2 parse_dictionary
-
-    my $dict = parse_dictionary($string);
-
-Parses a Dictionary and returns an array reference of C<[ $key, $item ]>
-pairs in field order. An empty field value yields an empty array reference.
-
-As with parameters, keys are not deduplicated, so a field value that repeats
-one reports it twice; see L</Parameters> for why, and for the one-liner that
-collapses them the way RFC 9651 says to.
-
-=head1 ERRORS
-
-Malformed input is reported by C<die>, with a message naming the byte offset
-the parser had reached:
-
-    HTTP::libsfparse: parse error at offset 17 at yourscript.pl line 42.
-
-Field values arrive from the network, so malformed ones are ordinary rather
-than exceptional: wrap the call in C<eval> (or C<Try::Tiny>, or C<try>) and
-treat a failure as "this field is invalid, ignore it or reject the message",
-which is what RFC 9651 section 3 requires anyway.
-
-Note that the offset is where parsing stopped, which is not always exactly
-where a human would say the mistake is. Do not parse the message to recover
-the offset programmatically; it is for logs and humans.
-
-=head1 BYTES, NOT CHARACTERS
-
-HTTP field values are byte strings, and that is what these functions expect.
-A character string is accepted as long as it contains nothing above U+00FF
-(so it can be interpreted as bytes unambiguously); anything wider is a fatal
-error rather than a silent misparse of Perl's internal UTF-8. If you have
-decoded text, encode it first.
-
-Display strings (C<%"...">) are the one place where RFC 9651 carries real
-Unicode, and this module hands those back decoded, with the UTF-8 flag set.
-
-=head1 WHAT IS DELIBERATELY NOT EXPOSED
-
-libsfparse also provides C<sfparse_unescape>, C<sfparse_base64decode> and
-C<sfparse_pctdecode>. Those functions assume their input has already been
-validated by the parser and that the output buffer is large enough; handed
-arbitrary Perl strings they would read and write out of bounds. They are used
-internally on parser-produced values only, and are not exported.
-
-=head1 THREADS
-
-The functions in this module need no special care. Each call allocates its own
-parser and its own copy of the input, frees both before returning, and shares
-nothing with any other call, so they are re-entrant and safe to use from
-several threads at once.
-
-=head1 CONFORMANCE
+=head2 Conformance
 
 The distribution bundles the HTTP Working Group's
 L<structured-field-tests|https://github.com/httpwg/structured-field-tests>
@@ -318,7 +183,54 @@ All of them pass. One passes by exemption rather than agreement: libsfparse
 rejects a byte sequence carrying extra Base64 padding, which the suite marks
 C<can_fail>, so either behaviour conforms.
 
+=head2 Bytes, not Characters
+
+HTTP field values are ASCII byte strings, and that is what these functions expect.
+A string is accepted as long as it contains nothing above U+007E.
+
+Display strings (C<%"...">) are the one place where RFC 9651 carries real
+Unicode, and this module hands those back decoded, with the UTF-8 flag set.
+
+=head1 before:EXPORTS
+
+Nothing is exported by default
+
+=export parse_item
+
+    my $item = parse_item($string);
+
+Parses a field value consisting of a single item and returns one item.
+Trailing content after the item is a parse error, as is an empty field value.
+
+=export parse_list
+
+    my $list = parse_list($string);
+
+Parses a List and returns an array reference of items. An empty field value
+yields an empty array reference, which is what RFC 9651 calls an empty list.
+
+=export parse_dictionary
+
+    my $dict = parse_dictionary($string);
+
+Parses a Dictionary and returns an array reference of C<[ $key, $item ]>
+pairs in field order. An empty field value yields an empty array reference.
+
+As with parameters, keys are not deduplicated, so a field value that repeats
+one reports it twice; see L</Parameters> for why, and for the one-liner that
+collapses them the way RFC 9651 says to.
+
+=head1 KNOWN ISSUES
+
+libsfparse also provides C<sfparse_unescape>, C<sfparse_base64decode> and
+C<sfparse_pctdecode>. Those functions assume their input has already been
+validated by the parser and that the output buffer is large enough; handed
+arbitrary Perl strings they would read and write out of bounds. They are used
+internally on parser-produced values only, and are not exported.
+
 =head1 SEE ALSO
+
+L<HTTP::StructuredField> provides an object-oriented interface.
 
 L<RFC 9651|https://www.rfc-editor.org/rfc/rfc9651>, Structured Field Values
 for HTTP.
@@ -329,13 +241,25 @@ Scheme for HTTP, whose C<Priority> field is a dictionary.
 L<libsfparse|https://github.com/ngtcp2/sfparse> and its
 L<documentation|https://nghttp2.org/sfparse/>.
 
-=head1 LICENSE AND COPYRIGHT
+=head1 prepend:SUPPORT
 
-This module is free software; you can redistribute it and/or modify it under
-the same terms as Perl itself.
+Only the latest release of this module will be supported.
 
-The bundled copy of libsfparse in F<src/> is Copyright (c) 2023 sfparse
-contributors and others, and is distributed under the MIT license; see
-F<src/LICENSE.sfparse>. It is included unmodified.
+This module requires Perl v5.20 or later.
+Only Perl versions released in the past ten years will be supported.
+
+=head2 Reporting Bugs and Submitting Feature Requests
+
+=head1 append:SUPPORT
+
+If the bug you are reporting has security implications which make it inappropriate to send to a public issue tracker,
+then see F<SECURITY.md> for instructions how to report security vulnerabilities.
+
+=head1 after:COPYRIGHT AND LICENSE
+
+The bundled copy of libsfparse in F<src/> is Copyright (c) 2023
+Tatsuhiro Tsujikawa and other sfparse contributors.
+It is distributed under the MIT license; see F<src/LICENSE.sfparse>.
+It is included unmodified.
 
 =cut
