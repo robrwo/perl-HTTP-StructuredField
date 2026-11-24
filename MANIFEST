@@ -10,7 +10,6 @@ src/LICENSE.sfparse
 src/sfparse.c
 src/sfparse.h
 src/UPSTREAM-COMMIT.txt
-t/00-load.t
 t/01-item.t
 t/02-list.t
 t/03-dictionary.t
