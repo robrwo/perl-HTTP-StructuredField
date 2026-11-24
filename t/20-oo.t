@@ -42,7 +42,7 @@ subtest "inner list" => sub {
 
     ok my $item = HTTP::StructuredField->parse_item('("a" %"b" c;d="e")');
 
-    ok $item->is_list;
+    ok $item->is_inner_list;
 
     my $list = $item->value;
 

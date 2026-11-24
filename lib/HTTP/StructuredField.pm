@@ -23,7 +23,7 @@ our $VERSION = 'v0.0.1';
         for my $key ( keys $dist->%* ) {
 
             my $input = $dict->{$key};
-            $input->is_list or die "list expected";
+            $input->is_inner_list or die "list expected";
 
             my @items = $input->value->@*;
 
@@ -85,7 +85,7 @@ This returns the value of the item.
 =cut
 
 sub value($self) {
-    if ( $self->is_list ) {
+    if ( $self->is_inner_list ) {
         my $class = ref($self);
         return [ map { bless $_, $class } $self->[SFP_VALUE]->@* ];
     }
@@ -148,7 +148,7 @@ Note that the value will be surrounded by double quotes, unless it is an element
 
 =method is_integer
 
-=method is_list
+=method is_inner_list
 
 Returns true if the value is an inner list.
 The value will be an array reference to a list of unblessed items.
@@ -178,7 +178,7 @@ sub type($self) {
         my $fn   = "HTTP::libsfparse::${name}";
         my $code = $fn->();
 
-        my ($suffix) = $name =~ /_([A-Z]+)\z/a;
+        my ($suffix) = $name =~ /_((?:INNER_)?[A-Z]+)\z/a;
         my $method = "is_" . lc($suffix);
 
         *$method = Sub::Util::set_subname __PACKAGE__ . "::$method" => sub($self) { $self->type == $code };
