@@ -58,6 +58,8 @@ sub parse_item($class, $str) {
 This parses a string as a dictionary.
 The result is a hash reference where the values are C<HTTP::StructuredField> items.
 
+Note that this is I<not> an ordered hash.
+
 =cut
 
 sub parse_dictionary( $class, $str) {
@@ -98,6 +100,8 @@ sub value($self) {
 
 This returns a hash reference of the item's parameters.
 The values are C<HTTP::StructuredField> items.
+
+Note that this is I<not> an ordered hash.
 
 =cut
 
