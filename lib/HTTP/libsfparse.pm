@@ -8,7 +8,7 @@ use XSLoader   ();
 
 our $VERSION = 'v0.0.1';
 
-# ABSTRACT: parse RFC 9421 HTTP Structured Fields using libsfparse
+# ABSTRACT: parse RFC 9651 HTTP Structured Fields using libsfparse
 
 our @TYPES = qw(
     SFPARSE_TYPE_BOOLEAN

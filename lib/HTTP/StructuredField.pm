@@ -11,7 +11,7 @@ use experimental qw( postderef signatures );
 
 our $VERSION = 'v0.0.1';
 
-# ABSTRACT: parse RFC 9421 HTTP Structured Fields
+# ABSTRACT: parse RFC 9651 HTTP Structured Fields
 
 =head1 SYNOPSIS
 
@@ -38,7 +38,7 @@ our $VERSION = 'v0.0.1';
 =head1 DESCRIPTION
 
 This is an object-oriented wrapper around L<HTTP::libsfparse>, for correctly parsing
-L<RFC 9421|https://www.rfc-editor.org/info/rfc9421/> HTTP Structured Fields.
+L<RFC 9651|https://www.rfc-editor.org/info/rfc9651/> HTTP Structured Fields.
 
 =cut
 
