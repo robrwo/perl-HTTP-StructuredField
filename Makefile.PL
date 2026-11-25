@@ -23,7 +23,6 @@ WriteMakefile(
         'XSLoader' => '0',
     },
     TEST_REQUIRES => {
-        'Test::More' => '0.88',
         'Test2::V0'    => '0',
         'Digest::MD5'  => 0,
         'MIME::Base64' => 0,
