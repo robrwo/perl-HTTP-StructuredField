@@ -93,7 +93,7 @@ static const char *sfp_input(pTHX_ SV *sv, STRLEN *lenp) {
   }
 
   if (SvUTF8(sv)) {
-    SV *tmp = sv_2mortal(newSVsv(sv));
+    SV *tmp = newSVsv_nomg(sv);
 
     if (!sv_utf8_downgrade(tmp, TRUE)) {
       croak("HTTP::libsfparse: input must be a byte string, but it contains "
