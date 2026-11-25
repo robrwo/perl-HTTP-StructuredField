@@ -158,6 +158,8 @@ static SV *sfp_decode_sv(pTHX_ const sfparse_vec *src, sfp_decoder decode) {
   SvCUR_set(sv, dest.len);
   *SvEND(sv) = '\0';
 
+  SvTAINT(sv);
+
   return sv;
 }
 
