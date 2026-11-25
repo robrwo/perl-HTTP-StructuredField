@@ -43,6 +43,18 @@ XSLoader::load( __PACKAGE__, $VERSION );
 
 __END__
 
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+HTTP::libsfparse - parse RFC 9651 HTTP Structured Fields using libsfparse
+
+=head1 VERSION
+
+version v0.0.1
+
 =head1 SYNOPSIS
 
     use HTTP::libsfparse qw(
@@ -194,25 +206,31 @@ Unicode, and this module hands those back decoded, with the UTF-8 flag set.
 This module has a hard size limit of 32KiB for byte strings.
 Note that most web servers will default to much lower limits, usually 8KiB.
 
-=head1 before:EXPORTS
+=head1 NAME
 
-Nothing is exported by default
+HTTP::libsfparse - parse RFC 9651 HTTP Structured Fields using libsfparse
 
-=export parse_item
+=head1 VERSION
+
+version v0.0.1
+
+=head1 EXPORTS
+
+=head2 parse_item
 
     my $item = parse_item($string);
 
 Parses a field value consisting of a single item and returns one item.
 Trailing content after the item is a parse error, as is an empty field value.
 
-=export parse_list
+=head2 parse_list
 
     my $list = parse_list($string);
 
 Parses a List and returns an array reference of items. An empty field value
 yields an empty array reference, which is what RFC 9651 calls an empty list.
 
-=export parse_dictionary
+=head2 parse_dictionary
 
     my $dict = parse_dictionary($string);
 
@@ -222,6 +240,10 @@ pairs in field order. An empty field value yields an empty array reference.
 As with parameters, keys are not deduplicated, so a field value that repeats
 one reports it twice; see L</Parameters> for why, and for the one-liner that
 collapses them the way RFC 9651 says to.
+
+=head1 before:EXPORTS
+
+Nothing is exported by default
 
 =head1 KNOWN ISSUES
 
@@ -244,7 +266,12 @@ Scheme for HTTP, whose C<Priority> field is a dictionary.
 L<libsfparse|https://github.com/ngtcp2/sfparse> and its
 L<documentation|https://nghttp2.org/sfparse/>.
 
-=head1 prepend:SUPPORT
+=head1 SOURCE
+
+The development version is on github at L<https://github.com/robrwo/perl-HTTP-StructuredField>
+and may be cloned from L<https://github.com/robrwo/perl-HTTP-StructuredField.git>
+
+=head1 SUPPORT
 
 Only the latest release of this module will be supported.
 
@@ -253,12 +280,27 @@ Only Perl versions released in the past ten years will be supported.
 
 =head2 Reporting Bugs and Submitting Feature Requests
 
-=head1 append:SUPPORT
+Please report any bugs or feature requests on the bugtracker website
+L<https://github.com/robrwo/perl-HTTP-StructuredField/issues>
+
+When submitting a bug or request, please include a test-file or a
+patch to an existing test-file that illustrates the bug or desired
+feature.
 
 If the bug you are reporting has security implications which make it inappropriate to send to a public issue tracker,
 then see F<SECURITY.md> for instructions how to report security vulnerabilities.
 
-=head1 after:COPYRIGHT AND LICENSE
+=head1 AUTHOR
+
+Robert Rothenberg <perl@rhizomnic.com>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is Copyright (c) 2026 by Robert Rothenberg.
+
+This is free software, licensed under:
+
+  The MIT (X11) License
 
 The bundled copy of libsfparse in F<src/> is Copyright (c) 2023
 Tatsuhiro Tsujikawa and other sfparse contributors.
