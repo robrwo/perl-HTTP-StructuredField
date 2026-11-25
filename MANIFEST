@@ -1,4 +1,5 @@
 Changes
+lib/HTTP/StructuredField.pm
 lib/HTTP/libsfparse.pm
 Makefile.PL
 MANIFEST
@@ -45,4 +46,3 @@ t/structured-field-tests/token-generated.json
 t/structured-field-tests/token.json
 t/structured-field-tests/UPSTREAM-COMMIT.txt
 t/structured-field-tests/VENDORED.md
-xt/pod.t

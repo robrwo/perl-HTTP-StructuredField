@@ -1,6 +1,7 @@
 # Version control and editor leftovers
 ^\.git/
 ^\.gitignore$
+^\.build/
 ~$
 \.bak$
 \.orig$
@@ -17,7 +18,10 @@
 \.so$
 ^libsfparse\.c$
 ^libsfparse\.xsc$
+^tmp/
 
 # Previously built distributions
 ^HTTP-libsfparse-[0-9._]+/
 ^HTTP-libsfparse-[0-9._]+\.tar\.gz$
+^HTTP-StructuredField-[0-9._]+/
+^HTTP-StructuredField-[0-9._]+\.tar\.gz$
