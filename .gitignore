@@ -2,6 +2,9 @@
 HTTP-libsfparse-*.sigstore.json
 HTTP-libsfparse-*.tar.gz
 HTTP-libsfparse-*/
+HTTP-StructuredField-*.sigstore.json
+HTTP-StructuredField-*.tar.gz
+HTTP-StructuredField-*/
 MYMETA.*
 Makefile
 Makefile.old
