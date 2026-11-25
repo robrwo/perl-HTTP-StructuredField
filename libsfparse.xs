@@ -413,6 +413,11 @@ static void sfp_init(pTHX_ sfp_wrap *w, SV *input) {
 
   s = sfp_input(aTHX_ input, &len);
 
+  /*  The HTTPWG test suite requires large fields, but most modern web servers limit fields to 8KiB */
+  if (len > 32767) {
+    croak("HTTP::libsfparse: field is too large");
+  }
+
   Zero(w, 1, sfp_wrap);
 
   if (len > 0) {

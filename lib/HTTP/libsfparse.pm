@@ -191,6 +191,9 @@ A string is accepted as long as it contains nothing above U+007E.
 Display strings (C<%"...">) are the one place where RFC 9651 carries real
 Unicode, and this module hands those back decoded, with the UTF-8 flag set.
 
+This module has a hard size limit of 32KiB for byte strings.
+Note that most web servers will default to much lower limits, usually 8KiB.
+
 =head1 before:EXPORTS
 
 Nothing is exported by default
