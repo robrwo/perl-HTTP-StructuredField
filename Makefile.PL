@@ -45,10 +45,10 @@ WriteMakefile(
         resources   => {
             repository => {
                 type => 'git',
-                web  => 'https://github.com/ngtcp2/sfparse',
+                web  => 'https://github.com/robrwo/perl-HTTP-StructuredField',
             },
         },
-        x_contributors => ['sfparse contributors (bundled C library)'],
+        x_contributors => ['Paul Johnson <paul@pjcj.net>'],
     },
 );
 
