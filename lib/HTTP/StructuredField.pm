@@ -10,7 +10,7 @@ use Sub::Util ();
 
 use experimental qw( postderef signatures );
 
-our $VERSION = 'v0.0.3';
+our $VERSION = 'v0.0.4';
 
 # ABSTRACT: parse RFC 9651 HTTP Structured Fields
 
