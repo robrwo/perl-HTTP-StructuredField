@@ -1,92 +1,108 @@
-# HTTP::libsfparse
+# NAME
 
-Perl XS bindings for [libsfparse](https://github.com/ngtcp2/sfparse), the C
-parser for HTTP Structured Field Values ([RFC
-9651](https://www.rfc-editor.org/rfc/rfc9651), which obsoletes RFC 8941)
-written for the ngtcp2 and nghttp3 QUIC/HTTP3 stacks.
+HTTP::StructuredField - parse RFC 9651 HTTP Structured Fields
 
-Structured Field Values are the typed syntax used by newer HTTP fields such as
-`Priority`, `Accept-CH`, `Cache-Status` and `Signature-Input`.
+# SYNOPSIS
 
 ```perl
-use HTTP::libsfparse qw( parse_dictionary :types :index );
+use HTTP::StructuredField;
 
-# Every item is [ $type, $value, $params ],
-# and a dictionary is a list of [ $key, $item ] pairs in field order.
+try {
 
-my $pri = parse_dictionary('u=5, i');
+    my $dict = HTTP::StructuredField->parse_dictionary( $msg->header("signature-input") );
+    for my $key ( keys $dist->%* ) {
 
-$pri->[0][SFP_KEY];                                    # 'u'
-$pri->[0][SFP_ITEM][SFP_VALUE];                        # 5
-$pri->[0][SFP_ITEM][SFP_TYPE] == SFPARSE_TYPE_INTEGER; # true
-$pri->[1][SFP_ITEM][SFP_TYPE] == SFPARSE_TYPE_BOOLEAN; # true
+        my $input = $dict->{$key};
+        $input->is_inner_list or die "list expected";
 
-# Pairs collapse into a hash when duplicate keys do not matter
-my %pri = map { $_->[SFP_KEY] => $_->[SFP_ITEM] } @$pri;
-$pri{u}[SFP_VALUE];                                    # 5
+        my @items = $input->value->@*;
+
+  }
+
+
+}
+catch ($error) {
+  ...
+}
 ```
 
-The types are libsfparse's own `sfparse_type` enumerators, re-exported with
-its values, so a value's type never has to be compared as a string. The
-positions within an item and within a pair have names too (`:index`), so a
-chain of subscripts reads as what it walks rather than as a row of numbers.
+# DESCRIPTION
 
-See the module documentation for the full interface:
+This is an object-oriented wrapper around [HTTP::libsfparse](https://metacpan.org/pod/HTTP%3A%3Alibsfparse), for correctly parsing
+[RFC 9651](https://www.rfc-editor.org/info/rfc9651/) HTTP Structured Fields.
 
-    perldoc HTTP::libsfparse
+# REQUIREMENTS
 
-## Installing
+This module lists the following modules as runtime dependencies:
 
-    perl Makefile.PL
-    make
-    make test
-    make install
+- [Exporter](https://metacpan.org/pod/Exporter) version 5.57 or later
+- [Ref::Util](https://metacpan.org/pod/Ref%3A%3AUtil)
+- [Sub::Util](https://metacpan.org/pod/Sub%3A%3AUtil)
+- [XSLoader](https://metacpan.org/pod/XSLoader)
+- [experimental](https://metacpan.org/pod/experimental)
+- [perl](https://metacpan.org/pod/perl) version v5.20.0 or later
+- [strict](https://metacpan.org/pod/strict)
+- [warnings](https://metacpan.org/pod/warnings)
 
-libsfparse is bundled in `src/`, so there is no system library to install. It
-is two C files with no dependencies beyond the C standard library.
+See the `cpanfile` file for the full list of prerequisites.
 
-## Notes on the binding
+# INSTALLATION
 
-libsfparse is a pull parser: it allocates nothing and never copies its input,
-and its state machine fixes which of its entry points may follow which. The
-binding keeps all of that inside a single function call. Each of the three
-functions takes its own copy of the field value, initialises a parser of its
-own, walks it from start to finish in the order the state machine expects, and
-frees both before returning. So there is no parser object to misuse, no call
-order for a caller to get wrong, and no state shared between calls.
+The latest version of this module (along with any dependencies) can be installed from [CPAN](https://www.cpan.org) with the `cpan` tool that is included with Perl:
 
-That matters because calling those entry points out of order does not return
-an error: libsfparse calls `abort()`, which would take the interpreter down
-rather than raise something Perl can catch. Keeping each parser inside one
-function call is what makes those branches unreachable, and it is the reason
-the library can be vendored unmodified.
+```
+cpan HTTP::StructuredField
+```
 
-`sfparse_unescape`, `sfparse_base64decode` and `sfparse_pctdecode` are
-deliberately not exposed: they assume pre-validated input and a
-large-enough output buffer, so handed arbitrary Perl strings they would read
-and write out of bounds. They are used internally on parser output only.
+You can also extract the distribution archive and install this module (along with any dependencies):
 
-## Conformance
+```
+cpan .
+```
 
-`t/13-httpwg-suite.t` runs the HTTP Working Group's
-[structured-field-tests](https://github.com/httpwg/structured-field-tests)
-conformance suite, vendored in `t/structured-field-tests/`: 1607 cases, of
-which 873 are required to be rejected. Each case is compared as a whole
-structure, with duplicate keys and parameters resolved the way RFC 9651 says
-to.
+You can also install this module manually using the following commands:
 
-One case passes by exemption rather than agreement: libsfparse rejects a byte
-sequence with extra Base64 padding, which the suite marks `can_fail`, so
-either behaviour conforms.
+```
+perl Makefile.PL
+make
+make test
+make install
+```
 
-## License
+If you are working with the source repository, then it may not have a `Makefile.PL` file.  But you can use the [Dist::Zilla](https://dzil.org/) tool in anger to build and install this module:
 
-This distribution is free software and may be redistributed and modified under
-the same terms as Perl itself.
+```
+dzil build
+dzil test
+dzil install --install-command="cpan ."
+```
 
-The bundled copy of libsfparse in `src/` is included unmodified under the MIT
-license; see `src/LICENSE.sfparse`.
+For more information, see [How to install CPAN modules](https://www.cpan.org/modules/INSTALL.html).
 
-The conformance suite in `t/structured-field-tests/` is Copyright (c) 2018-
-IETF Trust and the persons identified as authors of the code, and is included
-under the 3-clause BSD license; see `t/structured-field-tests/LICENSE.md`.
+# SUPPORT
+
+Please report any bugs or feature requests on the bugtracker website
+[https://github.com/robrwo/perl-HTTP-StructuredField/issues](https://github.com/robrwo/perl-HTTP-StructuredField/issues)
+
+When submitting a bug or request, please include a test-file or a
+patch to an existing test-file that illustrates the bug or desired
+feature.
+
+# SOURCE
+
+The development version is on github at [https://github.com/robrwo/perl-HTTP-StructuredField](https://github.com/robrwo/perl-HTTP-StructuredField)
+and may be cloned from [https://github.com/robrwo/perl-HTTP-StructuredField.git](https://github.com/robrwo/perl-HTTP-StructuredField.git)
+
+# AUTHOR
+
+Robert Rothenberg <perl@rhizomnic.com>
+
+# COPYRIGHT AND LICENSE
+
+This software is Copyright (c) 2026 by Robert Rothenberg.
+
+This is free software, licensed under:
+
+```
+The MIT (X11) License
+```
