@@ -194,6 +194,8 @@ Note that the value will be surrounded by double quotes, unless it is an element
 
 =head2 is_integer
 
+Returns true if the value is an integer.
+
 =head2 is_inner_list
 
 Returns true if the value is an inner list.
