@@ -20,6 +20,7 @@ WriteMakefile(
     },
     PREREQ_PM => {
         'Exporter' => '5.57',
+        'Hash::Ordered' => '0.009',
         'XSLoader' => '0',
     },
     TEST_REQUIRES => {

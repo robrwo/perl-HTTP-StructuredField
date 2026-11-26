@@ -1,5 +1,9 @@
 Revision history for HTTP-libsfparse:
 
+v0.0.4
+  [Bug Fixes]
+  - Added missing prerequsite to Makefile.PL.
+
   [Documentation]
   - Added missing timestamp to Changes for v0.0.3.
 
