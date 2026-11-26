@@ -89,6 +89,12 @@ and may be cloned from [https://github.com/robrwo/perl-HTTP-StructuredField.git]
 
 Robert Rothenberg <perl@rhizomnic.com>
 
+The XS wrapper [HTTP::libsfparse](https://metacpan.org/pod/HTTP%3A%3Alibsfparse) was written with the assistance of Claude Opus.
+
+# CONTRIBUTOR
+
+Paul Johnson <paul@pjcj.net>
+
 # COPYRIGHT AND LICENSE
 
 This software is Copyright (c) 2026 by Robert Rothenberg.

@@ -294,6 +294,12 @@ then see F<SECURITY.md> for instructions how to report security vulnerabilities.
 
 Robert Rothenberg <perl@rhizomnic.com>
 
+This wrapper was written with the assistance of Claude Opus.
+
+=head1 CONTRIBUTOR
+
+Paul Johnson <paul@pjcj.net>
+
 =head1 COPYRIGHT AND LICENSE
 
 This software is Copyright (c) 2026 by Robert Rothenberg.
