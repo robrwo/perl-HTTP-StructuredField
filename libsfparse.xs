@@ -116,7 +116,7 @@ static SV *sfp_int_sv(pTHX_ int64_t v) {
 #else
   /* RFC 9651 integers and dates are limited to 15 digits, which a double
      still represents exactly, so this stays lossless on 32 bit IVs. */
-  if (v >= (int64_t)IV_MIN && v <= (int64_t)IV_MAX) {
+  if (v >= I32_MIN && v <= I32_MAX) {
     return newSViv((IV)v);
   }
 
