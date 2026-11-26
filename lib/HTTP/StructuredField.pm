@@ -135,10 +135,6 @@ L<RFC 9651|https://www.rfc-editor.org/info/rfc9651/> HTTP Structured Fields.
 
 HTTP::StructuredField - parse RFC 9651 HTTP Structured Fields
 
-=head1 VERSION
-
-version v0.0.1
-
 =head1 METHODS
 
 =head2 parse_item

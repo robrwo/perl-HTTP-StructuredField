@@ -51,10 +51,6 @@ __END__
 
 HTTP::libsfparse - parse RFC 9651 HTTP Structured Fields using libsfparse
 
-=head1 VERSION
-
-version v0.0.1
-
 =head1 SYNOPSIS
 
     use HTTP::libsfparse qw(
