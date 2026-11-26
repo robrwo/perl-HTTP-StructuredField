@@ -1,12 +1,3 @@
-/*
- * HTTP::libsfparse - Perl XS binding for libsfparse (RFC 9651)
- *
- * Copyright (c) 2026 HTTP::libsfparse contributors
- *
- * This library is free software; you can redistribute it and/or modify it
- * under the same terms as Perl itself.
- */
-
 #define PERL_NO_GET_CONTEXT 1
 
 #include "EXTERN.h"
