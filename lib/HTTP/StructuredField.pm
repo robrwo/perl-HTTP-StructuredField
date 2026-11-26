@@ -209,6 +209,11 @@ Note that the value will be surrounded by double quotes, unless it is an element
 
 =head2 is_token
 
+Returns true if the value is a token.
+
+Tokens are short textual words that begin with an alphabetic character or "*", followed by zero to many token characters, which are the same as those allowed by the L<HTTP "token"|https://www.rfc-editor.org/info/rfc9110/#section-5.6.2> plus the ":" and "/" characters.
+
+
 =head1 SOURCE
 
 The development version is on github at L<https://github.com/robrwo/perl-HTTP-StructuredField>
