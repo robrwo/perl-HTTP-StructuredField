@@ -3,6 +3,7 @@ package HTTP::StructuredField;
 use v5.20;
 use warnings;
 
+use Hash::Ordered;
 use HTTP::libsfparse qw( :index );
 use Ref::Util qw( is_plain_arrayref );
 use Sub::Util ();
@@ -21,8 +22,8 @@ sub parse_item($class, $str) {
 
 sub parse_dictionary( $class, $str) {
     my $list = HTTP::libsfparse::parse_dictionary($str);
-    my %dict = map { $_->[SFP_KEY] => bless $_->[SFP_ITEM], $class; } $list->@*;
-    return \%dict;
+    my $dict = Hash::Ordered->new( map { $_->[SFP_KEY] => bless $_->[SFP_ITEM], $class; } $list->@* );
+    return $dict;
 }
 
 
@@ -46,8 +47,8 @@ sub value($self) {
 sub params($self) {
     my $class = ref($self);
     my $list = $self->[SFP_PARAMS];
-    my %dict = map { $_->[SFP_KEY] => bless $_->[SFP_ITEM], $class; } $list->@*;
-    return \%dict;
+    my $params = Hash::Ordered->new( map { $_->[SFP_KEY] => bless $_->[SFP_ITEM], $class; } $list->@* );
+    return $params;
 }
 
 
@@ -110,9 +111,9 @@ version v0.0.1
     try {
 
         my $dict = HTTP::StructuredField->parse_dictionary( $msg->header("signature-input") );
-        for my $key ( keys $dist->%* ) {
+        for my $key ( $dist->keys ) {
 
-            my $input = $dict->{$key};
+            my $input = $dict->get($key);
             $input->is_inner_list or die "list expected";
 
             my @items = $input->value->@*;
@@ -147,9 +148,7 @@ This parses a string as an C<HTTP::StructuredField> item.
 =head2 parse_dictionary
 
 This parses a string as a dictionary.
-The result is a hash reference where the values are C<HTTP::StructuredField> items.
-
-Note that this is I<not> an ordered hash.
+The result is L<Hash::Ordered> object where the values are C<HTTP::StructuredField> items.
 
 =head2 parse_list
 
@@ -162,10 +161,8 @@ This returns the value of the item.
 
 =head2 params
 
-This returns a hash reference of the item's parameters.
+This returns a L<Hash::Ordered> object of the item's parameters.
 The values are C<HTTP::StructuredField> items.
-
-Note that this is I<not> an ordered hash.
 
 =head2 has_params
 

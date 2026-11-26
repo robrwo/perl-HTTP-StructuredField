@@ -16,7 +16,7 @@ subtest "token" => sub {
 
     ok $item->has_params;
     my $params = $item->params;
-    ok my $q = $params->{q};
+    ok my $q = $params->get("q");
 
     ok $q->is_decimal;
     is $q->type_name, "decimal";
@@ -32,7 +32,6 @@ subtest "byteseq" => sub {
     ok my $item = HTTP::StructuredField->parse_item(":${b64}:");
 
     ok !$item->has_params;
-    is $item->params, {};
     ok $item->is_byteseq;
     is $item->value, $bytes;
 
@@ -59,10 +58,10 @@ subtest "inner list" => sub {
     ok $list->[2]->has_params;
 
     my $params = $list->[2]->params;
-    is [ keys $params->%* ], [qw( d )];
+    is [ $params->keys ], [qw( d )];
 
-    ok $params->{d}->is_string;
-    is $params->{d}->value, "e";
+    ok $params->get("d")->is_string;
+    is $params->get("d")->value, "e";
 
 };
 
@@ -71,12 +70,12 @@ subtest "dict" => sub {
 
     ok my $dict = HTTP::StructuredField->parse_dictionary('u=5, i');
 
-    ok my $u = $dict->{u};
+    ok my $u = $dict->get("u");
     ok $u->is_integer;
     is $u->type_name, "integer";
     is $u->value, 5;
 
-    ok my $i = $dict->{i};
+    ok my $i = $dict->get("i");
     ok $i->is_boolean;
     ok !!$i->value;
 
