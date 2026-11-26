@@ -11,9 +11,9 @@ WriteMakefile(
     NAME             => 'HTTP::libsfparse',
     VERSION_FROM     => 'lib/HTTP/libsfparse.pm',
     ABSTRACT_FROM    => 'lib/HTTP/libsfparse.pm',
-    AUTHOR           => 'rrwo <rrwo@cpansec.org>',
+    AUTHOR           => 'Robert Rothenberg <perl@rhizomnic.com>',
     LICENSE          => 'perl_5',
-    MIN_PERL_VERSION => '5.010',
+    MIN_PERL_VERSION => '5.020',
 
     CONFIGURE_REQUIRES => {
         'ExtUtils::MakeMaker' => '6.64',
