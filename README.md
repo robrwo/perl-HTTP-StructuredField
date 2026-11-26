@@ -69,14 +69,6 @@ make test
 make install
 ```
 
-If you are working with the source repository, then it may not have a `Makefile.PL` file.  But you can use the [Dist::Zilla](https://dzil.org/) tool in anger to build and install this module:
-
-```
-dzil build
-dzil test
-dzil install --install-command="cpan ."
-```
-
 For more information, see [How to install CPAN modules](https://www.cpan.org/modules/INSTALL.html).
 
 # SUPPORT
@@ -106,3 +98,6 @@ This is free software, licensed under:
 ```
 The MIT (X11) License
 ```
+
+The bundled copy of libsfparse is Copyright (c) 2023 Tatsuhiro Tsujikawa and other sfparse contributors.
+It is included unmodified.
