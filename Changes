@@ -1,15 +1,15 @@
 Revision history for HTTP-libsfparse:
 
   [Incompatible Changes]
-  - HTTP::StructuredField parse_dictionary and params return Hash::Ordered objects, instead of hash references.
+  - HTTP::StructuredField parse_dictionary and params changed to return Hash::Ordered objects, instead of hash references.
 
   [Bug Fixes]
-  - Fix workaround for 32-bit systems.
+  - Fixd workaround for 32-bit systems.
 
   [Documentation]
-  - Remove incorrect VERSION from the POD.
+  - Removed incorrect VERSION from the POD.
 
-  - Fix version typo in Changes.
+  - Fixd version typo in Changes.
 
 v0.0.2    2026-11-26 00:21:22+00:00 Europe/London
   [Documentation]
