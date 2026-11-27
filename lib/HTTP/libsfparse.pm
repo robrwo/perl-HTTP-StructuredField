@@ -247,7 +247,7 @@ Nothing is exported by default
 
 RFC 9651 specifies that integers can be up to 15 digits long, which
 makes decoding them into integers problematic for 32-bit systems.
-Numbers that are too large will be represented internally as strings.
+Numbers that are too large will be represented using L<Math::Int64>.
 
 libsfparse also provides C<sfparse_unescape>, C<sfparse_base64decode> and
 C<sfparse_pctdecode>. Those functions assume their input has already been
