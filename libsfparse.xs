@@ -105,13 +105,21 @@ static SV *sfp_int_sv(pTHX_ int64_t v) {
 #if IVSIZE >= 8
   return newSViv((IV)v);
 #else
-  /* RFC 9651 integers and dates are limited to 15 digits, which a double
-     still represents exactly, so this stays lossless on 32 bit IVs. */
-  if (v >= I32_MIN && v <= I32_MAX) {
+  SV *sv;
+
+  /* RFC 9651 integers and dates are limited to 15 digits, so when the
+     number is too large, this will represent it as a string */
+  if (v >= IMIN && v <= IMAX) {
     return newSViv((IV)v);
   }
 
-  return newSVnv((NV)v);
+  sv = newSV(0);
+  sv_grow(sv, 16);
+  SvPOK_only(sv);
+
+  itoa(v, (uint8_t *)SvPVX(sv), 10);
+
+  return sv;
 #endif
 }
 
