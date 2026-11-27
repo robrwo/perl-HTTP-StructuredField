@@ -1,5 +1,6 @@
 Revision history for HTTP-libsfparse:
 
+v0.0.5    2026-11-27 15:01:35+00:00 Europe/London
   [Bug Fixes]
   - Reverted broken workaround for 32-bit system. Use Math::Int64 instead.
 
