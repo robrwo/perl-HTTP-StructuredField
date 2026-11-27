@@ -4,8 +4,6 @@ v0.0.4
   [Bug Fixes]
   - Added missing prerequsite to Makefile.PL.
 
-  - Fixed signed integer workaround for 32-bit systems.
-
   [Documentation]
   - Added missing timestamp to Changes for v0.0.3.
 
@@ -18,7 +16,7 @@ v0.0.3    2026-11-26 10:36:39+00:00 Europe/London
   - HTTP::StructuredField parse_dictionary and params changed to return Hash::Ordered objects, instead of hash references.
 
   [Bug Fixes]
-  - Fixed workaround for 32-bit systems.
+  - Fixd workaround for 32-bit systems.
 
   [Documentation]
   - Removed incorrect VERSION from the POD.
