@@ -30,10 +30,8 @@ WriteMakefile(
         'Test2::V0'    => '0',
         'Digest::MD5'  => 0,
         'MIME::Base64' => 0,
-
-        # t/13-httpwg-suite.t reads the conformance suite's JSON. Core since
-        # perl 5.14; the test skips itself if it is missing.
-        'JSON::PP' => '2.27103',
+        'JSON'         => '0',
+        'B'            => 0,
     },
 
     XS     => { 'libsfparse.xs' => 'libsfparse.c' },
