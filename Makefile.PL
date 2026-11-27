@@ -43,9 +43,13 @@ WriteMakefile(
     META_MERGE => {
         'meta-spec' => { version => 2 },
         dynamic_config => 0,
-        resources   => {
+          resources   => {
+            bugtracker => {
+                web  => 'https://github.com/robrwo/perl-HTTP-StructuredField/issues',
+            },
             repository => {
                 type => 'git',
+                url  => 'git@github.com:robrwo/perl-HTTP-StructuredField.git',
                 web  => 'https://github.com/robrwo/perl-HTTP-StructuredField',
             },
         },
