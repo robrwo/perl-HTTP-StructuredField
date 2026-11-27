@@ -15,13 +15,13 @@
 # sides also have the RFC's rule for a repeated key applied before they are
 # compared; see resolve_duplicates() below.
 
-use strict;
+use v5.20;
 use warnings;
+
+use Test2::V0;
 
 use File::Basename qw( dirname );
 use File::Spec ();
-use Test2::V0;
-
 use JSON ();
 use B;
 
