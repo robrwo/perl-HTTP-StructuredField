@@ -1,8 +1,13 @@
 Revision history for HTTP-libsfparse:
 
+  [Bug Fixes]
+  - Reverted broken workaround for 32-bit system. Use Math::Int64 instead.
+
 v0.0.4    2026-11-27 12:30:09+00:00 Europe/London
   [Bug Fixes]
   - Added missing prerequsite to Makefile.PL.
+
+  - Updated workaround for 32-bit systems to save longer numbers as strings.
 
   [Documentation]
   - Added missing timestamp to Changes for v0.0.3.
