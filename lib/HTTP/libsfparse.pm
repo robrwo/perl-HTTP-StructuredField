@@ -98,6 +98,8 @@ stacks.
 
 It uses a bundled copy of libsfparse, and not a version that may already be installed on your system.
 
+You may prefer to use L<HTTP::StructuredField> instead.
+
 =head2 Format of the Parsed Data
 
 Every parsed item is an array reference of three elements:
